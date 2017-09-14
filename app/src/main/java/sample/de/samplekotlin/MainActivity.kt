@@ -8,11 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import sample.de.samplekotlin.dao.Entity
+import sample.de.samplekotlin.server.GeolocationCache
+import sample.de.samplekotlin.server.GeolocationService
 
 
 class MainActivity : LifecycleActivity() {
@@ -21,10 +23,17 @@ class MainActivity : LifecycleActivity() {
     lateinit var entitiesViewModel: EntitiesViewModel
     lateinit var adapter: SimpleAdapter
 
-    lateinit var buttonDelete : Button
+    lateinit var buttonDelete: Button
     lateinit var buttonAdd: Button
+    lateinit var buttonServer: Button
 
-    val buttonLabel : Button by lazy {
+    val memoryCache: GeolocationCache by lazy {
+        GeolocationCache()
+    }
+
+    val serverSource = GeolocationService()
+
+    val buttonLabel: Button by lazy {
         findViewById<Button>(R.id.button4)
     }
 
@@ -34,10 +43,27 @@ class MainActivity : LifecycleActivity() {
         listView = findViewById(R.id.listView)
         buttonDelete = findViewById(R.id.button2)
         buttonAdd = findViewById(R.id.button3)
+        buttonServer = findViewById(R.id.button5)
 
-        buttonDelete.setOnClickListener({view -> entitiesViewModel.deleteRandomRow() })
+        buttonDelete.setOnClickListener({ view -> entitiesViewModel.deleteRandomRow() })
 
-        buttonAdd.setOnClickListener({view -> entitiesViewModel.addItem() })
+        buttonAdd.setOnClickListener({ view -> entitiesViewModel.addItem() })
+
+        buttonServer.setOnClickListener({
+
+        Observable.concat(
+                memoryCache.getGeolocation("Oxford University,uk"),
+                serverSource.getGeolocation("Oxford University,uk")
+        )
+                    .firstOrError()
+                    .subscribeOn(Schedulers.io())
+                    .map({ it.results.first().formatted_address })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { Toast.makeText(this, it, Toast.LENGTH_LONG).show() },
+                            { Toast.makeText(this, it.message, Toast.LENGTH_LONG).show() }
+                    )
+        })
 
         entitiesViewModel = ViewModelProviders.of(this).get(EntitiesViewModel::class.java)
 
