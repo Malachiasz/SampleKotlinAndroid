@@ -6,15 +6,13 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'me.tatarka.retrolambda'
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "sample.de.samplekotlin"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -34,33 +32,33 @@ android {
 dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile "android.arch.lifecycle:runtime:${rootProject.ext.architectualVersion}"
-    compile "android.arch.lifecycle:extensions:${rootProject.ext.architectualVersion}"
-    annotationProcessor "android.arch.lifecycle:compiler:${rootProject.ext.architectualVersion}"
+    compile "android.arch.lifecycle:runtime:$architectualVersion"
+    compile "android.arch.lifecycle:extensions:$architectualVersionExtension"
+    annotationProcessor "android.arch.lifecycle:common-java8:$architectualVersion"
 
-    compile "android.arch.persistence.room:runtime:${rootProject.ext.architectualVersion}"
-    annotationProcessor "android.arch.persistence.room:compiler:${rootProject.ext.architectualVersion}"
+    compile "android.arch.persistence.room:runtime:$architectualVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$architectualVersion"
 
-    testCompile "android.arch.persistence.room:testing:${rootProject.ext.architectualVersion}"
-    compile "android.arch.persistence.room:rxjava2:${rootProject.ext.architectualVersion}"
+    testCompile "android.arch.persistence.room:testing:$architectualVersion"
+    compile "android.arch.persistence.room:rxjava2:$architectualVersion"
 
-    kapt "android.arch.persistence.room:compiler:${rootProject.ext.architectualVersion}"
+    kapt "android.arch.persistence.room:compiler:$architectualVersion"
 
     //RxJAva
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.3'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.10'
 
     //tests
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
 
     //retrofit
-    compile "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofit_version}"
-    compile "com.squareup.retrofit2:adapter-rxjava2:${rootProject.ext.retrofit_version}"
-    compile "com.squareup.retrofit2:converter-gson:${rootProject.ext.retrofit_version}"
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
 }

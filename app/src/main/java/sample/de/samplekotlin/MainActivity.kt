@@ -1,14 +1,18 @@
 package sample.de.samplekotlin
 
-import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.Button
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -16,8 +20,7 @@ import sample.de.samplekotlin.dao.Entity
 import sample.de.samplekotlin.server.GeolocationCache
 import sample.de.samplekotlin.server.GeolocationService
 
-
-class MainActivity : LifecycleActivity() {
+class MainActivity : FragmentActivity() {
 
     lateinit var listView: ListView
     lateinit var entitiesViewModel: EntitiesViewModel
@@ -51,10 +54,10 @@ class MainActivity : LifecycleActivity() {
 
         buttonServer.setOnClickListener({
 
-        Observable.concat(
-                memoryCache.getGeolocation("Oxford University,uk"),
-                serverSource.getGeolocation("Oxford University,uk")
-        )
+            Observable.concat(
+                    memoryCache.getGeolocation("Oxford University,uk"),
+                    serverSource.getGeolocation("Oxford University,uk")
+            )
                     .firstOrError()
                     .subscribeOn(Schedulers.io())
                     .map({ it.results.first().formatted_address })
@@ -67,8 +70,7 @@ class MainActivity : LifecycleActivity() {
 
         entitiesViewModel = ViewModelProviders.of(this).get(EntitiesViewModel::class.java)
 
-        entitiesViewModel.getNumberOfItems().observe(this, Observer<Int> {
-            numberOfItems ->
+        entitiesViewModel.getNumberOfItems().observe(this, Observer<Int> { numberOfItems ->
             buttonLabel.text = numberOfItems.toString()
         })
 
